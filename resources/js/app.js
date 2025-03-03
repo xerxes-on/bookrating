@@ -6,4 +6,4 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-// hello there
+// hello there!
