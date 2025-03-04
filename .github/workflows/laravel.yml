@@ -9,10 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign reviewers
-        uses: dearrrfish/reviewer-lottery-with-labels@v1
+      - uses: actions/checkout@v1
+      - uses: uesteibar/reviewer-lottery@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           add_reviewers: true
           min_reviewers: 1
-          max_reviewers: 3
+          max_reviewers: 1
           default_reviewers: "xerxes-on"
