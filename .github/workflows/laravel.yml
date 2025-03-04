@@ -1,0 +1,23 @@
+name: Laravel
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  laravel-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Assign reviewers
+      uses: mheap/reviewer-lottery@v2
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        add-reviewers: true
+        min-reviewers: 1
+        max-reviewers: 3
+        owners: "xerxes-on"
+
