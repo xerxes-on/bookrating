@@ -1,0 +1,19 @@
+name: Reviewer Lottery
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  assign-reviewers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign reviewers
+      - uses: actions/checkout@v4
+      - uses: uesteibar/reviewer-lottery@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          add_reviewers: true
+          min_reviewers: 1
+          max_reviewers: 1
+          default_reviewers: "xerxes-on"
