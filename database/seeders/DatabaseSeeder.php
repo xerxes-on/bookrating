@@ -25,7 +25,9 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(QuoteSeeder::class);
-        $this->call(Userseeder::class);
+        User::factory()->count(100)->create([
+            'password' => \Hash::make('user_password')
+        ]);
         $this->call(RatingSeeder::class);
 
 

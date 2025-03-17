@@ -2,47 +2,96 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail, FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    public function books(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class, 'user_books')
+            ->withPivot('status');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function likedQuotes(): BelongsToMany
+    {
+        return $this->belongsToMany(Quote::class, 'user_quotes');
+    }
+
+    public function likedGenres(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_user');
+    }
+
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+    }
+
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+    }
+
+    public function followingAuthors(): BelongsToMany
+    {
+        return $this->belongsToMany(Author::class, 'author_follows', 'user_id', 'author_id');
+    }
+
+    public function likedRatings(): BelongsToMany
+    {
+        return $this->belongsToMany(Rating::class, 'likes');
+    }
+
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
     /**
-     * Get the attributes that should be cast.
+     * Return a key value array, containing any custom claims to be added to the JWT.
      *
-     * @return array<string, string>
+     * @return array
      */
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // TODO: Implement canAccessPanel() method.
     }
 }
