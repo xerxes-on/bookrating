@@ -98,4 +98,27 @@ class QuoteController extends Controller
             ]);
         }
     }
+    public function search(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $query = $request->input('query');
+
+        if (empty($query)) {
+            return response()->json([
+                'data' => []
+            ]);
+        }
+
+        $quotes = Quote::query()
+            ->where('quote', 'LIKE', "%{$query}%")
+            ->orWhereHas('author', function($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%");
+            })
+            ->with(['author'])
+            ->limit(20)
+            ->get();
+
+        return response()->json([
+            'data' => QuotesResource::collection($quotes)
+        ]);
+    }
 }

@@ -10,9 +10,14 @@ use Illuminate\Support\Facades\Route;
 Route::resources([
     'books' => BookController::class,
     'quotes' => QuoteController::class,
-    'authors' => AuthorController::class,
     'reviews' => ReviewController::class,
 ]);
+Route::get('/searchBooks', [BookController::class, 'search']);
+Route::get('/searchQuotes', [QuoteController::class, 'search']);
+
+Route::get('/authors', [AuthorController::class, 'index']);
+Route::get('/authors/search', [AuthorController::class, 'search']);
+Route::get('/authors/{id}', [AuthorController::class, 'show']);
 Route::get('my_books', [UserController::class, 'my_books']);
 Route::get('my_quotes', [UserController::class, 'my_liked_quotes']);
 Route::post('profile', [UserController::class, 'profile']);

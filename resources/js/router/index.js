@@ -45,6 +45,21 @@ const router = createRouter({
             component: () => import('@/views/Quote.vue'),
         },
         {
+            path: '/authors',
+            name: 'authors',
+            component: () => import('@/views/Authors.vue'),
+        },
+        {
+            path: '/author/:id',
+            name: 'author',
+            component: () => import('@/views/Author.vue'),
+        },
+        {
+            path: '/join-the-race',
+            name: 'join',
+            component: () => import('@/views/Race.vue'),
+        },
+        {
             path: '/reviews',
             name: 'reviews',
             component: () => import('@/views/Reviews.vue'),

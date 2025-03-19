@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
-
 use App\Models\Book;
 use App\Models\Rating;
 use App\Models\User;
 use App\Recources\BooksResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class BookController
 {
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with('author')->paginate(10);
-        return response(BooksResource::collection($books));
+        $page = $request->input('page', 1);
+
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
+        $books = Book::with('author')
+            ->orderBy('created_at', 'desc')
+            ->skip($offset)
+            ->paginate($perPage);
+
+        return BooksResource::collection($books);
     }
 
     public function show(Book $book)
@@ -74,4 +82,33 @@ class BookController
         ];
     }
 
+    /**
+     * Search books by title, author name, or genre
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $query = $request->input('query');
+
+        if (empty($query)) {
+            return response()->json([
+                'data' => []
+            ]);
+        }
+
+        $books = Book::query()
+            ->where('title', 'LIKE', "%{$query}%")
+            ->orWhereHas('author', function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%");
+            })
+            ->with('author')
+            ->limit(20)
+            ->get();
+
+        return response()->json([
+            'data' => BooksResource::collection($books)
+        ]);
+    }
 }

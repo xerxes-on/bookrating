@@ -6,6 +6,12 @@ const getBookDetails = (id) => {
         .then((response) => response)
         .catch((error) => error.response)
 }
+const getBooks = (page = 1) => {
+    return client
+        .get(`/books?page=${page}`)
+        .then((response) => response)
+        .catch((error) => error.response)
+}
 const getBookReviews = (id) => {
     return client
         .post('/books/reviews/' + id)
@@ -24,10 +30,24 @@ const getReviews = (page) => {
         .then((response) => response)
         .catch((error) => error.response)
 }
-
+const searchBooks = (query) => {
+    return client
+        .get(`/searchBooks?query=${encodeURIComponent(query)}`)
+        .then((response) => response)
+        .catch((error) => error.response)
+}
+const searchQuotes = (query) => {
+    return client
+        .get(`/searchQuotes?query=${encodeURIComponent(query)}`)
+        .then((response) => response)
+        .catch((error) => error.response)
+}
 const bookApi = {
     getBookDetails,
     getBookReviews,
+    searchBooks,
+    getBooks,
+    searchQuotes,
     rateBook,
     getReviews,
 }

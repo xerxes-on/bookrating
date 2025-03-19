@@ -5,26 +5,43 @@ namespace App\Http\Controllers\Api;
 use App\Models\Author;
 use App\Models\User;
 use App\Recources\AuthorsResource;
+use Illuminate\Http\Request;
 
 class AuthorController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $authors = Author::with('books')->paginate(10);
-        return response(AuthorsResource::collection($authors));
-    }
+        $page = $request->input('page', 1);
+        $perPage = 12;
+        $offset = ($page - 1) * $perPage;
+        $authors = Author::with(['books', 'quotes'])
+            ->orderBy('name')
+            ->skip($offset)
+            ->take($perPage)
+            ->get();
 
-    public function show(string $id)
+        return AuthorsResource::collection($authors);
+    }
+    public function search(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $author = Author::with('books')->find($id);
-        if ($author) {
-            return response(new AuthorsResource($author));
-        } else {
-            return response('There is no hotel with such id');
+        $query = $request->input('query');
+        if (empty($query)) {
+            return AuthorsResource::collection(collect([]));
         }
+        $authors = Author::where('name', 'like', "%{$query}%")
+            ->with(['books', 'quotes'])
+            ->orderBy('name')
+            ->get();
+
+        return AuthorsResource::collection($authors);
+    }
+    public function show($id)
+    {
+        $author = Author::with(['books', 'quotes'])->findOrFail($id);
+        return new AuthorsResource($author);
     }
 
     public function follow(Author $author)
