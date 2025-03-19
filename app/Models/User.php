@@ -92,6 +92,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Filam
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // TODO: Implement canAccessPanel() method.
+        return true;
     }
 }
