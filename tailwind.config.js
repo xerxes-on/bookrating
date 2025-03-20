@@ -14,6 +14,11 @@ export default {
     theme: {
         colors: {
             light_blue: '#A4C0ED',
+            gray: {
+                400: '#9ca3af',
+                500: '#D9D9D9',
+                200: '#9ca3af'
+            },
             primary_dark: '#E4EFC9',
             primary: '#F6FFDE',
             dark_blue: '#265073',
@@ -24,7 +29,6 @@ export default {
             red500: '#ef4444',
             green: '#26A541',
             orange_dark: '#FF9F00',
-            gray: '#D9D9D9',
         },
         extend: {
             fontFamily: {

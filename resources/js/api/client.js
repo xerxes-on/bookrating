@@ -13,10 +13,10 @@ const authStore = useAuthStore()
 
 
 const client = axios.create({
-    baseURL: 'https://col-dev-book.ddev.site/' + 'api/v1',
+    baseURL: 'https://bookrating.xerxes.uz/' + 'api/v1',
     headers: {
-        'Content-Type': 'multipart/form-data',
-        "ngrok-skip-browser-warning": 'true',
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     },
 })
 
