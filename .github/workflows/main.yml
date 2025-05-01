@@ -34,20 +34,12 @@ jobs:
       - name: Build assets
         run: npm run build
 
-      # Using existing .env file on the server
-
-      - name: Prepare for deployment
-        run: |
-          # Remove files not needed in production
-          rm -rf node_modules
-          rm -rf tests
-
       - name: Deploy with rsync
-        uses: burnett01/rsync-deployments@v2
+        uses: burnett01/rsync-deployments
         with:
           switches: -avz --delete
           path: ./
-          remote_path: public_html/
+          remote_path: bookrating.anvarcontact.uz/
           remote_host: ${{ secrets.SSH_HOST }}
           remote_user: ${{ secrets.SSH_USERNAME }}
           remote_key: ${{ secrets.KEY }}   # private key
