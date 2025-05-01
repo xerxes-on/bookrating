@@ -42,25 +42,24 @@ jobs:
           rm -rf node_modules
           rm -rf tests
 
-      - name: Deploy to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Deploy with rsync
+        uses: burnett01/rsync-deployments@v2
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps          # use FTPS, not plain FTP
-          port: 21                # or 990 for implicit FTPS
-          security: strict        # enforce TLS
-          max-upload-attempts: 5  # auto-retry
-          concurrency: 1
-          local-dir: ./
-          server-dir: ./
+          switches: -avz --delete
+          path: ./
+          remote_path: public_html/
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USERNAME }}
+          remote_key: ${{ secrets.KEY }}   # private key
+          remote_port: ${{ secrets.SSH_PORT }}
           exclude: |
-            **/.git*
-            **/.git*/**
-             **/vendor/*/**
-             **/storage/*/**
-            .env.example
+            .git*
+            node_modules/
+            tests/
+            storage/
+            vendor/
+            .env*
+
 
       - name: Run post-deployment commands via SSH
         uses: appleboy/ssh-action@v1.2.1
@@ -71,7 +70,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd public_html
+            cd bookrating.anvarcontact.uz
             composer i --no-dev --optimize-autoloader --no-interaction
             php artisan migrate --force
             php artisan storage:link
