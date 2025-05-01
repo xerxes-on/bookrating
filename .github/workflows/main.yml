@@ -36,7 +36,7 @@ jobs:
 
       - name: Push to cPanel remote
         run: |
-          git remote add cpanel ssh://$CPANEL_USER@$CPANEL_HOST:$SSH_PORT/home/$CPANEL_USER/repositories/site.git
+          git remote add cpanel ssh://anvarcon@anvarcontact.uz:30151/home/anvarcon/bookrating.anvarcontact.uz
           git push cpanel main
 
       - name: Run post-deployment commands via SSH
