@@ -34,24 +34,10 @@ jobs:
       - name: Build assets
         run: npm run build
 
-      - name: Deploy with rsync
-        uses: burnett01/rsync-deployments
-        with:
-          switches: -avz --delete
-          path: ./
-          remote_path: bookrating.anvarcontact.uz/
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_user: ${{ secrets.SSH_USERNAME }}
-          remote_key: ${{ secrets.KEY }}   # private key
-          remote_port: ${{ secrets.SSH_PORT }}
-          exclude: |
-            .git*
-            node_modules/
-            tests/
-            storage/
-            vendor/
-            .env*
-
+      - name: Push to cPanel remote
+        run: |
+          git remote add cpanel ssh://$CPANEL_USER@$CPANEL_HOST:$SSH_PORT/home/$CPANEL_USER/repositories/site.git
+          git push cpanel main
 
       - name: Run post-deployment commands via SSH
         uses: appleboy/ssh-action@v1.2.1
