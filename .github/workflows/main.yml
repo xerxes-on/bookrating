@@ -48,6 +48,11 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps          # use FTPS, not plain FTP
+          port: 21                # or 990 for implicit FTPS
+          security: strict        # enforce TLS
+          max-upload-attempts: 5  # auto-retry
+          concurrency: 1
           local-dir: ./
           server-dir: ./
           exclude: |
