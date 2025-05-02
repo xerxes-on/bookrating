@@ -13,7 +13,7 @@ const authStore = useAuthStore()
 
 
 const client = axios.create({
-    baseURL: window.mainAppuUrl + 'api/v1',
+    baseURL: window.mainAppuUrl,
     headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

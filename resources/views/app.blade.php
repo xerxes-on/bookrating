@@ -12,7 +12,7 @@
     <script src="https://kit.fontawesome.com/9c18f8edbf.js" crossorigin="anonymous"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
-        window.mainAppUrl = @json(config('app.url'));
+        window.mainAppUrl = @json(config('app.url')) + "/api/v1";
     </script>
 </head>
 <body class="bg-primary ">
