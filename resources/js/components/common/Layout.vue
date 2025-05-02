@@ -18,7 +18,7 @@ const hideMenu = () => {
         <!-- Logo Section -->
         <RouterLink :to="{ name: 'home' }">
             <div class="flex items-center space-x-2">
-                <img alt="Logo" class="w-11 h-11 rounded-full object-cover" :src="'./images/logo.png'" />
+                <img alt="Logo" class="w-11 h-11 rounded-full object-cover" :src="'/images/logo.png'" />
                 <span class="text-2xl font-bold">LetsRate</span>
             </div>
         </RouterLink>
@@ -40,7 +40,7 @@ const hideMenu = () => {
     <!--    Footer-->
     <footer class="bg-primary_dark py-10 px-6">
         <!-- Copyright -->
-        <div class="border-t border-gray-300 mt-8 pt-6 text-center text-gray-500">
+        <div class="border-t border-gray-300 mt-8 pt-6 text-center text-black">
             <p>Copyright ©2025 Team C Wolverhampton . All rights reserved</p>
         </div>
     </footer>

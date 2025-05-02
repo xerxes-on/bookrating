@@ -26,7 +26,7 @@ const rateBook = (data) => {
 }
 const getReviews = (page) => {
     return client
-        .post('/all-reviews?page=' + page)
+        .get('/all-reviews?page=' + page)
         .then((response) => response)
         .catch((error) => error.response)
 }

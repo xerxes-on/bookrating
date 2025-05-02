@@ -1,5 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
+import {useBookStore} from "@/stores/book.js";
+import {useHomeStore} from "@/stores/home.js";
+import {useReviewsStore} from "@/stores/reviews.js";
+import {useProfileStore} from "@/stores/profile.js";
 
 const router = createRouter({
     history: createWebHistory('/'),
@@ -80,18 +84,38 @@ const router = createRouter({
             component: () => import('@/views/NotFound.vue'),
         },
     ],
+    scrollBehavior(to) {
+        if (to.hash) {
+            return { el: to.hash, behavior: 'smooth' }
+        }
+        return { top: 0 }
+    },
 })
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore()
-    const isAuthenticated = authStore.isAuthorized
+    const homeStore = useHomeStore()
+    const bookStore = useBookStore()
+    const reviews = useReviewsStore()
+    const profile = useProfileStore()
+    const token = authStore.token
 
-    if (!isAuthenticated && !['login', 'register'].includes(to.name)) {
-        next({ name: 'login' })
-    } else if (isAuthenticated && ['login', 'register'].includes(to.name)) {
-        next({ name: 'home' })
-    } else {
-        next()
+    const needsAuth = !['login', 'register'].includes(to.name)
+    const isLoggedIn = !!authStore.user && token
+
+    if (needsAuth && !isLoggedIn) {
+        authStore.resetStore()
+        homeStore.resetStore()
+        bookStore.resetStore()
+        reviews.resetStore()
+        profile.resetProfile()
+        return next({ name: 'login' })
     }
+
+    if ((to.name === 'login' || to.name === 'register') && isLoggedIn) {
+        return next({ name: 'home' })
+    }
+    next()
 })
 
 export default router
+

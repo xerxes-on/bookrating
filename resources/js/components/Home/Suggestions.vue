@@ -106,7 +106,7 @@ onBeforeUnmount(() => {
         <div class="slider-wrapper" ref="slideContainer" :style="containerStyle">
             <div v-for="book in suggestedBooks" :key="book.id" class="slide" :style="{ width: slideWidth }">
                 <RouterLink :to="`/book/${book.id}`" class="slide-link">
-                    <img :src="book.image" alt="book image" class="slide-image" />
+                    <img :src="book?.image" alt="book image" class="slide-image" />
                 </RouterLink>
             </div>
         </div>

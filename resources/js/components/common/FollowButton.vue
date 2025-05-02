@@ -12,6 +12,7 @@ const props = defineProps({
         required: true,
         type: Number,
     },
+
 })
 const status = defineModel({
     type: Boolean,

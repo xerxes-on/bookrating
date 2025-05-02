@@ -9,14 +9,15 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function profile()
+    public function profile(): \Illuminate\Http\JsonResponse
     {
         $user_info = User::with('books',
-                                'likedQuotes',
-                                'reviews',
-                                'likedGenres',
-                                'following',
-                                'followers')->find(auth()->user()->id);
+            'likedQuotes',
+            'reviews',
+            'likedGenres',
+            'following',
+            'followers')
+            ->find(auth()->user()->id);
         return response()->json([
             'user' => $user_info
         ]);
@@ -55,12 +56,12 @@ class UserController extends Controller
         }
         $user->update($updating_data);
         $user_info = User::with('books',
-                            'likedQuotes',
-                            'reviews',
-                            'likedGenres',
-                            'following',
-                            'followers')
-                            ->find(auth()->user()->id);
+            'likedQuotes',
+            'reviews',
+            'likedGenres',
+            'following',
+            'followers')
+            ->find(auth()->user()->id);
         return response()->json([
             'user' => $user_info
         ]);
@@ -71,10 +72,10 @@ class UserController extends Controller
     public function follow(User $user)
     {
         $current_user = User::find(auth()->user()->id);
-        if($current_user->following()->where('following_id',$user->id )->exists()){
+        if ($current_user->following()->where('following_id', $user->id)->exists()) {
             auth()->user()->following()->detach($user->id);
             return response()->json(['message' => 'User unfollowed successfully']);
-        }else{
+        } else {
             auth()->user()->following()->attach($user->id);
             return response()->json(['message' => 'User followed successfully']);
         }

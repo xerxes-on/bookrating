@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use App\Models\Rating;
 use App\Recources\ReviewsResource;
 use Illuminate\Http\JsonResponse;
@@ -23,9 +24,23 @@ class ReviewController extends Controller
         }
     }
 
-    public function getReviews():JsonResponse
+    public function getReviews(Book $book): JsonResponse
     {
-        $reviews = (new \App\Models\Rating)->with('user')->paginate(5);
+        $perPage = 10;
+        $reviews = Rating::query()->where('book_id', $book->id)
+            ->with(['user'])
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+        return response()->json($reviews);
+    }
+
+    public function getAllReviews(Request $request): JsonResponse
+    {
+        $page = $request->query('page', 1);
+        $reviews = Rating::with('user')
+            ->orderByDesc('created_at')
+            ->paginate(10, ['*'], 'page', $page);
         return response()->json($reviews);
     }
 
@@ -34,11 +49,16 @@ class ReviewController extends Controller
     {
         $request->validate(
             [
-                'rating' => 'min:1|max:5|required',
+                'rating' => 'min:1|max:10|required',
                 'comment' => 'nullable|min:10',
+                'book_id' => 'required|integer|exists:books,id'
             ]
         );
-        $inserting = $request->all();
+        $inserting = [
+            'comment' => $request->input('comment'),
+            'book_id' => $request->input('book_id'),
+            'rating' => $request->input('rating') * 2
+        ];
         $inserting['user_id'] = auth()->user()->id;
         Rating::create($inserting);
         return response()->json([
@@ -91,17 +111,13 @@ class ReviewController extends Controller
     {
         $review = Rating::find($id);
         if ($review->user->id == auth()->user()->id) {
-            if ($review) {
-                $review->delete();
-            } else {
-                return response('Not found');
-            }
+            $review->delete();
         } else {
             return response('Unauthorized');
         }
     }
 
-    public function like($id)
+    public function like($id): JsonResponse
     {
         $user = auth()->user();
         $rating = Rating::find($id);

@@ -107,16 +107,6 @@ const registerHandler = async () => {
             <button class="w-1/4 bg-primary_dark text-black font-bold rounded-full mb-4">Register</button>
         </form>
 
-        <div class="text-center mb-4">
-            <p class="text-sm mb-2">Sign up with</p>
-            <div class="flex justify-center space-x-4">
-                <a href="#" class="text-2xl"><i class="fa-brands fa-google"></i></a>
-                <a href="#" class="text-2xl"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#" class="text-2xl"><i class="fa-brands fa-apple"></i></a>
-                <a href="#" class="text-2xl"><i class="fa-brands fa-twitter"></i></a>
-            </div>
-        </div>
-
         <!-- Decorative elements -->
         <div class="absolute -top-8 right-4">
             <div class="w-16 h-16 bg-yellow-300 rounded-full flex items-center justify-center">

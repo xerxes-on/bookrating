@@ -17,13 +17,10 @@ onMounted(async () => {
     try {
         mainStore.loading = true
         const bookResponse = await bookApi.getBookDetails(route.params.id)
-        const bookReviews = await bookApi.getBookReviews(route.params.id)
-        if (bookResponse.status === 200 && bookReviews.status === 200) {
+        if (bookResponse.status === 200) {
             bookStore.book = bookResponse.data
-            bookStore.reviews = bookReviews.data
         } else {
             toast.error(bookResponse.data.message)
-            toast.error(bookReviews.data.message)
         }
     } catch (e) {
         toast.error('Oops! '+ e)
@@ -32,7 +29,6 @@ onMounted(async () => {
     }
 })
 const book = computed(() => bookStore.book)
-const reviews = computed(() => bookStore.reviews['ratings'])
 </script>
 
 <template>
@@ -96,7 +92,8 @@ const reviews = computed(() => bookStore.reviews['ratings'])
             </div>
         </div>
         <Author :author="book?.author" :book="book" />
-        <Reviews v-if="reviews" :reviews="reviews" />
+        <Reviews v-if="book"  :book-id="route.params.id"/>
+        <h1 id="xyz"></h1>
     </main>
 </template>
 

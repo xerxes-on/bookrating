@@ -245,7 +245,7 @@ const highlightText = (text, query) => {
                         class="book-card"
                     >
                         <div class="book-image-container">
-                            <img :src="book.image" :alt="book.title" class="book-image" />
+                            <img :src="book?.image" :alt="book.title" class="book-image" />
                             <div class="book-overlay">
                                 <div class="book-rating" v-if="book.average_rating">
                                     <span class="star">★</span>

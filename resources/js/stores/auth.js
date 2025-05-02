@@ -19,7 +19,8 @@ export const useAuthStore = defineStore(
         const setUser = (newUser) => {
             user.value = newUser
         }
-        const isAuthorized = computed(() => !!user.value)
+        // const getToken =
+        const isAuthorized = computed(() => token.value)
 
         const setToken = (newToken) => {
             token.value = newToken

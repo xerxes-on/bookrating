@@ -33,7 +33,7 @@ const mainStore = useMainStore()
 
 const currentRating = ref(0);
 const data = reactive({
-    rating: currentRating.value,
+    rating: currentRating.value ,
     comment: null,
     book_id: props.book.id,
 })
@@ -42,19 +42,17 @@ const submitReview = async () => {
     try {
         mainStore.loading = true
         const response = await bookApi.rateBook(data)
-        if (response.status === 200) {
+        if (response?.status === 200) {
             const bookReviews = await bookApi.getBookReviews(data.book_id)
             useBookStore().reviews = bookReviews.data
+            sleep(3000).then(
+                () => isFlipped.value = !isFlipped.value
+            )
+            visible.value = !visible.value
         }
     } catch (err) {
-        toast.warning('Oops!' + err)
     } finally {
-        visible.value = !visible.value
         mainStore.loading = false
-        sleep(3000).then(
-            () => isFlipped.value = !isFlipped.value
-        )
-
     }
 }
 
@@ -73,6 +71,11 @@ const resetHoverRating = () => {
     hoverRating.value = 0;
 };
 data.rating = currentRating.value;
+import { watch } from 'vue'
+
+watch(currentRating, (val) => {
+    data.rating = val
+})
 </script>
 
 <template>
@@ -185,7 +188,7 @@ data.rating = currentRating.value;
                     <div v-if="visible" v-confetti="{ particleCount: 1000 }" class="absolute celebrate left-1/2"/>
                     <h2 class="text-xl md:text-2xl font-bold text-center text-gray-700 mb-4">Write a Review</h2>
                     <div class="flex justify-center mb-4">
-                        <img :src="book?.image" alt="Book cover"
+                        <img  :src="book?.image" alt="Book cover"
                              class="w-24 h-24 md:w-32 md:h-32 object-cover rounded"/>
                     </div>
                     <h3 class="text-lg md:text-xl font-bold text-center text-gray-700 mb-2">{{ book?.title }}</h3>

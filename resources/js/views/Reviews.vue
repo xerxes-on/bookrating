@@ -6,7 +6,7 @@ import Reviews from '@/components/Reviews.vue'
 
 <template>
     <Layout>
-    <Reviews/>
+    <Reviews />
     </Layout>
 </template>
 

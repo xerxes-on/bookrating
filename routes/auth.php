@@ -10,9 +10,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
     Route::post('logout', 'logout')
-        ->middleware('auth:api');
+        ->middleware('auth:sanctum');
     Route::post('refresh', 'refresh')
-        ->middleware('auth:api');
+        ->middleware('auth:sanctum');
 });
 Route::get('login', function () {
     return redirect()->intended(

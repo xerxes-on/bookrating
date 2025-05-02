@@ -1,59 +1,83 @@
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import reviewsApi from '@/api/reviews.js'
 import { formatDate } from '@/utilities.js'
 import FollowButton from '@/components/common/FollowButton.vue'
 import LikeButton from '@/components/Books/LikeButton.vue'
 
-defineProps({
-    reviews: {
-        required: true,
-        type: Array,
-    },
+const props = defineProps({
+    bookId: { type: [String, Number], required: true },
+})
+
+const reviews = ref([])
+const page = ref(1)
+const lastPage = ref(null)
+const loading = ref(false)
+
+const loadMore = async () => {
+    if (loading.value) return
+    if (lastPage.value && page.value > lastPage.value) return
+
+    loading.value = true
+    try {
+        const payload = await reviewsApi.getReviews(props.bookId, page.value)
+        reviews.value.push(...payload.data.data)
+        lastPage.value = payload.data.last_page
+        page.value++
+    } finally {
+        loading.value = false
+    }
+}
+
+const onScroll = () => {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement
+    if (scrollTop + clientHeight >= scrollHeight - 50) {
+        // loadMore()
+    }
+}
+onMounted(() => {
+    loadMore()
+    window.addEventListener('scroll', onScroll)
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', onScroll)
 })
 </script>
 
 <template>
-    <section v-if="reviews" class="mt-12 p-6 rounded-2xl">
-        <h2 class="text-7xl font-tangerine mb-4">Readers Reviews</h2>
-        <div>
-            <p class="text-gray">Displaying 1 - 10 of 68 reviews</p>
-            <div v-for="(review, index) in reviews" :key="index" class="flex bg-primary p-4 rounded-xl shadow-sm space-x-4">
-                <div class="w-1/4 text-center">
-                    <div class="flex items-center justify-center">
-                        <img :src="review.user.profile_picture" alt="User Avatar" class="w-32 h-32 rounded-full bg-cover" />
-                        <div class="mt-2">
-                            <p class="ml-5 font-semibold text-2xl">{{ review.user.name }}</p>
-                            <p class="text-sm text-gray-500">{{ review.user.reviews }} Reviews</p>
-                            <p class="text-sm text-gray-500">{{ review.user.followers }} Followers</p>
-                        </div>
-                    </div>
+    <section class="mt-12 p-6 rounded-2xl">
+        <h2 class="text-4xl font-bold mb-4">Reader Reviews</h2>
+        <p class="text-gray-500 mb-6">Total loaded: {{ reviews.length }}</p>
+
+        <div v-for="rev in reviews" :key="rev.id" class="mb-6 p-4 bg-white rounded-xl shadow">
+            <div class="flex items-center mb-2" :id="'review-id-'+rev.id">
+                <img :src="rev.user.profile_picture" class="w-12 h-12 rounded-full mr-3" />
+                <div>
+                    <p class="font-semibold">{{ rev.user.name }}</p>
+                    <p class="text-sm text-gray-400">
+                        @{{ rev.user.username }}  • {{ formatDate(rev.created_at) }}
+                    </p>
+                </div>
+                <!-- Ratings and Reviews -->
+                <div class="flex items-center ml-10">
                     <div class="flex justify-center text-2xl items-center mt-2">
                         <span v-for="n in 5" :key="n">
-                            <i :class="['text-yellow', n <= review.data.rating / 2 ? 'fa-solid fa-star' : 'fa-regular fa-star']"></i>
+                            <i :class="['text-yellow', n <= rev.rating/2 ? 'fa-solid fa-star' : 'fa-regular fa-star']"></i>
                         </span>
-                    </div>
-                    <!-- Follow Button -->
-                    <div>
-                        <FollowButton :whoToFollow="review.user.id" v-model="review.user.is_followed" />
-                    </div>
-                </div>
-                <div class="flex-1">
-                    <p class="text-gray text-xl">{{ formatDate(review.data.created_at) }}</p>
-                    <p class="mt-2 text-gray-800 text-sm leading-relaxed">
-                        {{ review.data.comment }}
-                    </p>
-                    <div class="flex items-center justify-around w-1/2 space-x-4 mt-4">
-                        <div class="flex items-center space-x-1">
-                            <LikeButton v-model="review.is_liked" :id="review.data.id" like_what="review"/>
-                        </div>
-                        <div class="flex items-center space-x-1">
-                            <i class="far fa-comment"></i>
-                            <span>Comment</span>
-                        </div>
                     </div>
                 </div>
             </div>
+            <p class="mb-2">{{ rev.comment }}</p>
+            <div class="flex items-center space-x-4">
+                <LikeButton :count="rev.likes" :liked="rev.is_liked" :id="rev.id" like_what="review"/>
+                <FollowButton :whoToFollow="rev.user.id"/>
+            </div>
+
+        </div>
+
+        <div v-if="loading" class="text-center py-4">Loading more…</div>
+        <div v-else-if="lastPage && page > lastPage" class="text-center py-4 text-gray-400">
+            No more reviews.
         </div>
     </section>
 </template>
-
-<style scoped></style>

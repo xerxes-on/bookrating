@@ -23,6 +23,8 @@ class BookResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('description')
+                    ->required(),
                 Forms\Components\Select::make('categories')
                     ->relationship('categories', 'category_name')
                     ->searchable()
@@ -44,10 +46,9 @@ class BookResource extends Resource
                 Forms\Components\TextInput::make('number_of_pages')
                     ->integer()
                     ->required(),
-                Forms\Components\FileUpload::make('images')
+                Forms\Components\FileUpload::make('image')
                     ->required()
                     ->image()
-                    ->multiple()
                     ->imageEditor()
                     ->maxSize(5120)
                     ->panelLayout('grid')
@@ -60,9 +61,8 @@ class BookResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('images')
+                Tables\Columns\ImageColumn::make('image')
                     ->circular()
-                    ->stacked()
                     ->wrap()
                     ->limitedRemainingText()
                     ->checkFileExistence(false),

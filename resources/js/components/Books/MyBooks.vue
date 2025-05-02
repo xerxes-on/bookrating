@@ -47,6 +47,7 @@ const formatDate = (dateString) => {
 onMounted(() => {
     fetchBooks();
 });
+const defaultImage = '/images/cat.png';
 </script>
 
 <template>
@@ -60,7 +61,6 @@ onMounted(() => {
                                 :src="book.image"
                                 :alt="book.title"
                                 class="book-image"
-                                @error="$event.target.src = '/images/default-book.jpg'"
                             />
                             <div class="book-overlay">
                                 <div class="book-rating" v-if="book.average_rating">
