@@ -10,12 +10,13 @@
     <link rel="stylesheet" href="src/assets/css/output.css"/>
     <!--      fontawesome-->
     <script src="https://kit.fontawesome.com/9c18f8edbf.js" crossorigin="anonymous"></script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite('resources/css/app.css')
     <script>
         window.mainAppUrl = @json(config('app.url')) + "/api/v1";
     </script>
 </head>
 <body class="bg-primary ">
     <div id="app" class="overflow-hidden"></div>
+    @vite('resources/js/app.js')
 </body>
 </html>

@@ -99,7 +99,7 @@ router.beforeEach((to, from, next) => {
     const profile = useProfileStore()
     const token = authStore.token
 
-    const needsAuth = !['login', 'register'].includes(to.name)
+    const needsAuth = !['login', 'register', 'verify'].includes(to.name)
     const isLoggedIn = !!authStore.user && token
 
     if (needsAuth && !isLoggedIn) {
