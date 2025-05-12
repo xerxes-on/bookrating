@@ -32,14 +32,7 @@ class BookController
 
     public function trending_books(): JsonResponse
     {
-        $topRatedBookIds = Rating::select('book_id')
-            ->selectRaw('COUNT(*) as rating_count')
-            ->groupBy('book_id')
-            ->orderByDesc('rating_count')
-            ->limit(6)
-            ->pluck('book_id');
-
-        $topBooks = Book::whereIn('id', $topRatedBookIds)->with('author')->get();
+        $topBooks = Book::with('author')->limit(6)->get();
         return response()->json($topBooks);
     }
 
