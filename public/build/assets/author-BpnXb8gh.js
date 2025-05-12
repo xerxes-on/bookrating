@@ -1,1 +1,0 @@
-import{c as r}from"./client-t_DSb9yI.js";const o=(e=1)=>r.get(`/authors?page=${e}`).then(t=>t).catch(t=>t.response),s=e=>r.get(`/authors/search?query=${encodeURIComponent(e)}`).then(t=>t).catch(t=>t.response),n=e=>r.get(`/authors/${e}`).then(t=>t).catch(t=>t.response),h={getAuthors:o,searchAuthors:s,getAuthorDetails:n};export{h as a};
