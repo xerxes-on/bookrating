@@ -1,0 +1,1 @@
+import{c as o}from"./client-DX3z9xpM.js";const s=()=>o.post("/profile").then(t=>t).catch(t=>t.response),r=t=>o.post("/quotes/"+t).then(e=>e).catch(e=>e.response),p={getProfileDetails:s,getQuote:r};export{p};

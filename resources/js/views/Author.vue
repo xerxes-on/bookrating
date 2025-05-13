@@ -99,10 +99,9 @@ onMounted(async () => {
                             <RouterLink :to="`/book/${book.id}`" class="book-link">
                                 <div class="book-cover-container">
                                     <img
-                                        :src="'/storage/'+book?.image"
+                                        :src="book.image"
                                         :alt="book.title"
                                         class="book-cover"
-                                        @error="$event.target.src = '/images/default-book.jpg'"
                                     />
                                 </div>
                                 <div class="book-details">

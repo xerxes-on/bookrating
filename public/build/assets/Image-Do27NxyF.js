@@ -1,0 +1,1 @@
+import{d as a,o as n,J as s}from"./app-CFGuSI1Y.js";const i=["alt"],l={__name:"Image",props:{name:{type:String,required:!0},ext:{type:String,required:!0},w:{type:String,default:"200px"},h:{type:String,default:"200px"}},setup(t){const e=t,r="/images/"+e.name+"."+e.ext;return(m,o)=>(n(),a("img",{alt:t.name,src:r,style:s({maxWidth:e.w,maxHeight:e.h})},null,12,i))}};export{l as _};
