@@ -12,8 +12,8 @@ class BooksResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-//        $isFollowed = auth()->check() && auth()->user()->followingAuthors()->where('author_id',
-//                $this->author->id)->exists();
+        $isFollowed = auth()->check() && auth()->user()->followingAuthors()->where('author_id',
+                $this->author->id)->exists();
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -37,7 +37,7 @@ class BooksResource extends JsonResource
                 'data' => $this->author,
                 'books_count' => Author::find($this->author->id)->books()->count(),
                 'followers_count' => $this->author->followers->count(),
-                'isFollowed' => false
+                'isFollowed' => $isFollowed
             ],
         ];
     }
